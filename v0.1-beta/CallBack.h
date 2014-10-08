@@ -21,6 +21,9 @@
 #include <gtk/gtk.h>
 #include "op.h"
 
+
+void buffer_text_changed(GtkTextBuffer *buf,gpointer data);
+
 void menu_item_new_clicked(GtkWidget *wid,gpointer data);
 
 void menu_item_open_clicked(GtkWidget *wid,gpointer data);

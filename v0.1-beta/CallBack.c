@@ -18,6 +18,12 @@
 #include "CallBack.h"
 #include "op.h"
 
+void buffer_text_changed(GtkTextBuffer *buf,gpointer data)
+{
+	docFile.isSaved = FALSE;
+}
+
+
 void menu_item_new_clicked(GtkWidget *wid,gpointer data)
 {
 	newFile (GTK_WIDGET(data));

@@ -67,7 +67,11 @@ void newFile(GtkWidget *textView)
 		}
 		
 		gtk_widget_destroy (msgDialog);
+	}else{
+		
+		gtk_text_buffer_delete(buffer,&iStart,&iEnd);
 	}
+		
 	docFile.isSaved		= FALSE;
 	docFile.name		= NULL;
 	docFile.isOnDisk	= FALSE;
@@ -107,7 +111,7 @@ void openFile(GtkWidget *textView)
 			}
 			gtk_text_buffer_set_text (buffer,text,(gint)lenText);
 
-			docFile.isSaved		= FALSE;
+			docFile.isSaved		= TRUE;
 			docFile.isOnDisk	= TRUE;
 			g_free (text);
 		default:

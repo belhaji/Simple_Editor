@@ -31,6 +31,7 @@ int main(int argc,char *argv[])
 	GtkWidget *menuBar;
 	GtkWidget *scrolledWindow;
 	GtkWidget *textView;
+	GtkTextBuffer *buf;
 
 
 	gtk_init (&argc,&argv);
@@ -38,10 +39,11 @@ int main(int argc,char *argv[])
 	mainWindow		= createWindow ("SimpleEditor",600,400,GTK_WIN_POS_CENTER);
 	mainVBox		= gtk_vbox_new (FALSE,0);
 	textView		= gtk_text_view_new ();
-	scrolledWindow  = gtk_scrolled_window_new (NULL,NULL);
+	scrolledWindow  	= gtk_scrolled_window_new (NULL,NULL);
 	menuBar			= createMenuBar (textView,mainWindow);
+	buf			= gtk_text_view_get_buffer(GTK_TEXT_VIEW(textView));
 
-
+	g_signal_connect(buf,"changed",G_CALLBACK(buffer_text_changed),NULL);
 	g_signal_connect(G_OBJECT(mainWindow),"delete-event",G_CALLBACK(mainWindowDeleteEvent),(gpointer)textView);
 
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(scrolledWindow),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
