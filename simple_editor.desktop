@@ -1,0 +1,19 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=Simple Editor
+GenericName=Simple Editor
+Comment=Edit text files
+Exec=simple_editor
+Terminal=false
+Type=Application
+StartupNotify=true
+MimeType=text/plain;
+Icon=/usr/share/simple_editor/icon.png
+Categories=GNOME;GTK;Utility;TextEditor;
+
+[Desktop Action Window]
+Name=Open a New Window
+
+[Desktop Action Document]
+Name=Open a New Document
+Exec=simple_editor
