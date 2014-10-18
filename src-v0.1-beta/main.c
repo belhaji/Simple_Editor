@@ -31,6 +31,7 @@ int main(int argc,char *argv[])
 	GtkWidget *menuBar;
 	GtkWidget *scrolledWindow;
 	GtkWidget *textView;
+	GtkWidget *toolBar;
 	GtkTextBuffer *buf;
 
 
@@ -39,9 +40,10 @@ int main(int argc,char *argv[])
 	mainWindow		= createWindow ("SimpleEditor",600,400,GTK_WIN_POS_CENTER);
 	mainVBox		= gtk_vbox_new (FALSE,0);
 	textView		= gtk_text_view_new ();
-	scrolledWindow  	= gtk_scrolled_window_new (NULL,NULL);
+	scrolledWindow  = gtk_scrolled_window_new (NULL,NULL);
 	menuBar			= createMenuBar (textView,mainWindow);
-	buf			= gtk_text_view_get_buffer(GTK_TEXT_VIEW(textView));
+	buf				= gtk_text_view_get_buffer(GTK_TEXT_VIEW(textView));
+	toolBar			= createToolBar (textView);
 
 	g_signal_connect(buf,"changed",G_CALLBACK(buffer_text_changed),NULL);
 	g_signal_connect(G_OBJECT(mainWindow),"delete-event",G_CALLBACK(mainWindowDeleteEvent),(gpointer)textView);
@@ -57,6 +59,7 @@ int main(int argc,char *argv[])
 	
 	gtk_container_add (GTK_CONTAINER(mainWindow),mainVBox);
 	gtk_box_pack_start (GTK_BOX(mainVBox),menuBar,FALSE,FALSE,0);
+	gtk_box_pack_start (GTK_BOX(mainVBox),toolBar,FALSE,FALSE,0);
 	gtk_box_pack_start (GTK_BOX(mainVBox),scrolledWindow,TRUE,TRUE,0);
 	gtk_container_add (GTK_CONTAINER(scrolledWindow),textView);
 
