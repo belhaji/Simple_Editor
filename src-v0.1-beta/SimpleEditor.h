@@ -39,4 +39,10 @@ GtkWidget * createMenuBar(GtkWidget * textView,GtkWidget *mainWindow);
 GtkWidget * createToolBar(GtkWidget * textView);
 
 
+GtkWidget * createTextView(GtkWidget * statusBar);
+
+
+GtkWidget * createStatusBar(void);
+
+
 #endif /* SIMPLEEDITOR_H */

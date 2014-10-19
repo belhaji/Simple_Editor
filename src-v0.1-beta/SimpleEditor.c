@@ -184,6 +184,34 @@ GtkWidget * createToolBar(GtkWidget * textView)
 
 
 
+GtkWidget * createTextView(GtkWidget * statusBar){
+	GtkWidget * textView;
+	textView	= gtk_text_view_new ();
+	gtk_text_view_set_accepts_tab (GTK_TEXT_VIEW(textView),TRUE);
+	gtk_text_view_set_left_margin (GTK_TEXT_VIEW(textView),5);
+	gtk_text_view_set_right_margin(GTK_TEXT_VIEW(textView),5);
+
+	
+	g_signal_connect(G_OBJECT(textView),"cut-clipboard",G_CALLBACK(textViewCut),(gpointer) statusBar);
+	g_signal_connect(G_OBJECT(textView),"copy-clipboard",G_CALLBACK(textViewCopy),(gpointer) statusBar);
+	g_signal_connect(G_OBJECT(textView),"paste-clipboard",G_CALLBACK(textViewPaste),(gpointer) statusBar);
+	g_signal_connect(G_OBJECT(textView),"delete-from-cursor",G_CALLBACK(textViewDelete),(gpointer) statusBar);
+	
+	return textView;
+}
+
+
+GtkWidget * createStatusBar(void){
+	GtkWidget *statusBar ;
+	statusBar   = gtk_statusbar_new ();
+	gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(statusBar),TRUE);
+
+	
+	return statusBar;
+}
+
+
+
 
 
 

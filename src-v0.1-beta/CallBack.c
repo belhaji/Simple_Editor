@@ -121,4 +121,30 @@ void mainWindowDeleteEvent(GtkWidget *wid,GdkEvent  *e,gpointer data)
 	quit (GTK_WIDGET(data));	
 }
 
+void textViewCut(GtkWidget *textView,gpointer data){
+	GtkWidget *statusBar	= GTK_WIDGET(data);
+	guint	   context_id   = gtk_statusbar_get_context_id (GTK_STATUSBAR(statusBar),"notifyMsgs");
+	gtk_statusbar_remove_all (GTK_STATUSBAR(statusBar),context_id);
+	gtk_statusbar_push (GTK_STATUSBAR(statusBar),context_id,"text has been cuted successfuly !");
+	
+}
+void textViewCopy(GtkWidget *textView,gpointer data){
+	GtkWidget *statusBar	= GTK_WIDGET(data);
+	guint	   context_id   = gtk_statusbar_get_context_id (GTK_STATUSBAR(statusBar),"notifyMsgs");
+	gtk_statusbar_remove_all (GTK_STATUSBAR(statusBar),context_id);
+	gtk_statusbar_push (GTK_STATUSBAR(statusBar),context_id,"text has been copied successfuly !");
+}
+void textViewPaste(GtkWidget *textView,gpointer data){
+	GtkWidget *statusBar	= GTK_WIDGET(data);
+	guint	   context_id   = gtk_statusbar_get_context_id (GTK_STATUSBAR(statusBar),"notifyMsgs");
+	gtk_statusbar_remove_all (GTK_STATUSBAR(statusBar),context_id);
+	gtk_statusbar_push (GTK_STATUSBAR(statusBar),context_id,"text has been pasted successfuly !");
+}
+void textViewDelete(GtkWidget *textView,gpointer data){
+	GtkWidget *statusBar	= GTK_WIDGET(data);
+	guint	   context_id   = gtk_statusbar_get_context_id (GTK_STATUSBAR(statusBar),"notifyMsgs");
+	gtk_statusbar_remove_all (GTK_STATUSBAR(statusBar),context_id);
+	gtk_statusbar_push (GTK_STATUSBAR(statusBar),context_id,"text has been deleted successfuly !");
+}
+
 

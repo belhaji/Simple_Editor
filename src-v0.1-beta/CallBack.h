@@ -56,5 +56,10 @@ void mainWindowDeleteEvent(GtkWidget *wid,GdkEvent  *e,gpointer data);
 
 
 void textViewChanged(GtkTextBuffer *buffer,gpointer data);
+void textViewCut(GtkWidget *textView,gpointer data);
+void textViewCopy(GtkWidget *textView,gpointer data);
+void textViewPaste(GtkWidget *textView,gpointer data);
+void textViewDelete(GtkWidget *textView,gpointer data);
+
 
 #endif /* CALLBACK_H */

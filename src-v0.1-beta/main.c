@@ -32,6 +32,7 @@ int main(int argc,char *argv[])
 	GtkWidget *scrolledWindow;
 	GtkWidget *textView;
 	GtkWidget *toolBar;
+	GtkWidget *statusBar;
 	GtkTextBuffer *buf;
 
 
@@ -39,7 +40,8 @@ int main(int argc,char *argv[])
 
 	mainWindow		= createWindow ("SimpleEditor",600,400,GTK_WIN_POS_CENTER);
 	mainVBox		= gtk_vbox_new (FALSE,0);
-	textView		= gtk_text_view_new ();
+	statusBar		= createStatusBar ();
+	textView		= createTextView (statusBar);
 	scrolledWindow  = gtk_scrolled_window_new (NULL,NULL);
 	menuBar			= createMenuBar (textView,mainWindow);
 	buf				= gtk_text_view_get_buffer(GTK_TEXT_VIEW(textView));
@@ -50,17 +52,11 @@ int main(int argc,char *argv[])
 
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(scrolledWindow),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
 
-	gtk_text_view_set_accepts_tab (GTK_TEXT_VIEW(textView),TRUE);
-	gtk_text_view_set_left_margin (GTK_TEXT_VIEW(textView),5);
-	gtk_text_view_set_right_margin(GTK_TEXT_VIEW(textView),5);
-	
-
-
-	
 	gtk_container_add (GTK_CONTAINER(mainWindow),mainVBox);
 	gtk_box_pack_start (GTK_BOX(mainVBox),menuBar,FALSE,FALSE,0);
 	gtk_box_pack_start (GTK_BOX(mainVBox),toolBar,FALSE,FALSE,0);
 	gtk_box_pack_start (GTK_BOX(mainVBox),scrolledWindow,TRUE,TRUE,0);
+	gtk_box_pack_start (GTK_BOX(mainVBox),statusBar,FALSE,FALSE,0);
 	gtk_container_add (GTK_CONTAINER(scrolledWindow),textView);
 
 	gtk_widget_show_all(mainWindow);
