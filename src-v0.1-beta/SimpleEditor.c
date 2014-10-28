@@ -15,7 +15,6 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SimpleEditor.h"
 #include "CallBack.h"
 
 
@@ -102,6 +101,10 @@ GtkWidget * createMenuBar(GtkWidget * textView,GtkWidget *mainWindow)
 	gtk_menu_shell_append (GTK_MENU_SHELL(menuEdit),menuItem);
 	g_signal_connect(G_OBJECT(menuItem),"activate",G_CALLBACK(menu_item_deselect_clicked ),(gpointer) textView);
 
+	menuItem	= gtk_menu_item_new_with_label ("Font");
+	gtk_menu_shell_append (GTK_MENU_SHELL(menuEdit),menuItem);
+	g_signal_connect(G_OBJECT(menuItem),"activate",G_CALLBACK(menu_item_font_clicked ),(gpointer) textView);
+
 	menuItem	= gtk_menu_item_new_with_label ("Edit");
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM(menuItem),menuEdit);
 	gtk_menu_shell_append (GTK_MENU_SHELL(menuBar),menuItem);
@@ -187,10 +190,23 @@ GtkWidget * createToolBar(GtkWidget * textView)
 GtkWidget * createTextView(GtkWidget * statusBar){
 	GtkWidget * textView;
 	textView	= gtk_text_view_new ();
+	gsize  lenText;	
+	gchar * fontName;
+	PangoFontDescription *fontDesc;
+	gchar* configFileName = g_malloc(sizeof(gchar)*50);
+	sprintf(configFileName,"%s/.simple_editor.conf",g_get_home_dir ());
+
+	if(g_file_test (configFileName,G_FILE_TEST_EXISTS))
+	{
+		g_file_get_contents(configFileName,&fontName,NULL,NULL);
+		fontDesc = pango_font_description_from_string (fontName);	
+		gtk_widget_modify_font(textView,fontDesc);			
+		pango_font_description_free (fontDesc);	
+	} 
+
 	gtk_text_view_set_accepts_tab (GTK_TEXT_VIEW(textView),TRUE);
 	gtk_text_view_set_left_margin (GTK_TEXT_VIEW(textView),5);
 	gtk_text_view_set_right_margin(GTK_TEXT_VIEW(textView),5);
-
 	
 	g_signal_connect(G_OBJECT(textView),"cut-clipboard",G_CALLBACK(textViewCut),(gpointer) statusBar);
 	g_signal_connect(G_OBJECT(textView),"copy-clipboard",G_CALLBACK(textViewCopy),(gpointer) statusBar);

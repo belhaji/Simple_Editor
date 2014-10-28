@@ -100,6 +100,41 @@ void menu_item_deselect_clicked(GtkWidget *wid,gpointer data){
 	gtk_text_buffer_select_range(buffer,&iEnd,&iEnd);
 }
 
+
+void menu_item_font_clicked (GtkWidget *wid,gpointer data){
+	GtkWidget *dialog,*textView;
+	gchar * fontName;
+	PangoFontDescription *fontDesc;
+	gchar* configFileName = g_malloc(sizeof(gchar)*50);
+	FILE* configFile;
+	sprintf(configFileName,"%s/.simple_editor.conf",g_get_home_dir ());
+	textView = GTK_WIDGET(data);
+	dialog = gtk_font_selection_dialog_new ("Choose Font ");
+	switch(gtk_dialog_run (GTK_DIALOG(dialog)))
+	{
+		case GTK_RESPONSE_OK:
+			fontName = gtk_font_selection_dialog_get_font_name (GTK_FONT_SELECTION_DIALOG(dialog));
+			fontDesc = pango_font_description_from_string (fontName);
+			gtk_widget_modify_font (textView,fontDesc);
+			pango_font_description_free (fontDesc);
+			configFile = fopen(configFileName,"w+");
+			if(configFile == NULL)
+				g_print("error fopen\n");
+			else{
+				fprintf(configFile,"%s",fontName);
+				fclose (configFile);
+				}
+			g_free (fontName);
+			g_free(configFileName);
+			gtk_widget_destroy (dialog);
+			break;
+		case GTK_RESPONSE_CANCEL:
+			gtk_widget_destroy (dialog);
+			break; 
+	}
+}
+
+
 void menu_item_about_clicked(GtkWidget *wid,gpointer data){
 	GtkWidget   *mainWindow = GTK_WIDGET(data);
 	GtkWidget   *aboutDialog;

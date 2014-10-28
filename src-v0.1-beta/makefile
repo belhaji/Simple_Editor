@@ -1,5 +1,5 @@
 SimpleEditor 	: SimpleEditor.o main.o CallBack.o op.o
-	gcc  -o simple_editor SimpleEditor.o main.o CallBack.o op.o `pkg-config --cflags --libs gtk+-2.0`
+	gcc  -o simple_editor SimpleEditor.o main.o CallBack.o op.o settings.o `pkg-config --cflags --libs gtk+-2.0`
 
 SimpleEditor.o 	: SimpleEditor.c
 	gcc  -c SimpleEditor.c `pkg-config --cflags --libs gtk+-2.0`
@@ -7,12 +7,15 @@ SimpleEditor.o 	: SimpleEditor.c
 main.o		: main.c
 	gcc  -c main.c `pkg-config --cflags --libs gtk+-2.0`
 
+settings.o	: settings.c
+	gcc -c settings.c `pkg-config --cflags --libs gtk+-2.0`
 
 CallBack.o  	: CallBack.c op.c
 	gcc  -c CallBack.c `pkg-config --cflags --libs gtk+-2.0`
 
 op.o		: op.c
 	gcc  -c op.c `pkg-config --cflags --libs gtk+-2.0`
+
 	
 install		:
 	mkdir -p /usr/share/simple_editor/

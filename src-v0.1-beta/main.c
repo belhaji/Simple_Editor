@@ -38,7 +38,7 @@ int main(int argc,char *argv[])
 
 	gtk_init (&argc,&argv);
 
-	mainWindow		= createWindow ("SimpleEditor",600,400,GTK_WIN_POS_CENTER);
+	mainWindow		= createWindow ("SimpleEditor",800,500,GTK_WIN_POS_CENTER);
 	mainVBox		= gtk_vbox_new (FALSE,0);
 	statusBar		= createStatusBar ();
 	textView		= createTextView (statusBar);
@@ -58,8 +58,9 @@ int main(int argc,char *argv[])
 	gtk_box_pack_start (GTK_BOX(mainVBox),scrolledWindow,TRUE,TRUE,0);
 	gtk_box_pack_start (GTK_BOX(mainVBox),statusBar,FALSE,FALSE,0);
 	gtk_container_add (GTK_CONTAINER(scrolledWindow),textView);
-
+	
 	gtk_widget_show_all(mainWindow);
+		
 	gtk_main ();
 	return 0;
 }
