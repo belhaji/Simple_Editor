@@ -217,9 +217,8 @@ void menu_item_settings_clicked(GtkWidget *wid,gpointer data){
 			applySettings (&config,textView);
 			saveSettings (&config);
 			if(response == GTK_RESPONSE_OK)
-					gtk_widget_destroy (dialog);
+				gtk_widget_destroy (dialog);
 			break;
-			gtk_widget_destroy (dialog);
 		case GTK_RESPONSE_CANCEL:
 			gtk_widget_destroy (dialog);
 	}	

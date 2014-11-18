@@ -293,7 +293,9 @@ void loadSettings(Settings *config)
 	   config->justification = GTK_JUSTIFY_RIGHT;
 	else
 	   config->justification = GTK_JUSTIFY_CENTER;
-	config->font	=   g_key_file_get_string(file,"settings","font",NULL);
+	config->left_margin	 =  g_key_file_get_integer (file,"settings","leftMargin",NULL);	
+	config->right_margin =	g_key_file_get_integer (file,"settings","rightMargin",NULL);
+	config->font		 =   g_key_file_get_string(file,"settings","font",NULL);
 	
 }
 
@@ -317,7 +319,8 @@ void saveSettings(Settings *config)
 			g_key_file_set_string (file,"settings","justification","center");
 
 		g_key_file_set_string (file,"settings","font",config->font);
-			
+		g_key_file_set_integer (file,"settings","leftMargin",config->left_margin);	
+		g_key_file_set_integer (file,"settings","rightMargin",config->right_margin);
 		g_key_file_save_to_file (file,configFileName,NULL);
 		g_key_file_free (file);
 	}
