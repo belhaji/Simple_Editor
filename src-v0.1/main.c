@@ -21,7 +21,13 @@
 #include "op.h"
 
 Document docFile;
-
+Settings config = {
+	GTK_WRAP_NONE,
+	GTK_JUSTIFY_LEFT,
+	5,
+	5,
+	 "Sans 13"
+ };
 
 int main(int argc,char *argv[])
 {

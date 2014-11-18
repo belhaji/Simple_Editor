@@ -80,6 +80,32 @@ void newFile(GtkWidget *textView)
 
 void openFile(GtkWidget *textView)
 {
+
+	if(docFile.isSaved == FALSE && docFile.isOnDisk == TRUE ) 
+	{	
+		GtkWidget * msgDialog;
+		msgDialog = gtk_message_dialog_new(NULL,
+		                                   GTK_DIALOG_MODAL,
+		                                   GTK_MESSAGE_QUESTION,
+		                                   GTK_BUTTONS_YES_NO,
+	                          			   "Do you wanna save your file ?",
+		                                   NULL);
+		switch (gtk_dialog_run (GTK_DIALOG(msgDialog))) 
+		{   
+			
+			case GTK_RESPONSE_YES:
+				if(docFile.name == NULL)
+				{   
+					saveAs(textView);
+				}	
+				else
+				{
+					save(textView);
+				}
+		}
+		
+		gtk_widget_destroy (msgDialog);
+	}
 	gchar *fileName;
 	gchar *text = NULL;
 	GError *error;
@@ -224,12 +250,79 @@ void quit(GtkWidget * textView)
 }
 
 
+void applySettings(Settings *config,GtkWidget *textView)
+{
+	PangoFontDescription *fontDesc;
+	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW(textView),config->wrap_mode);
+	gtk_text_view_set_justification (GTK_TEXT_VIEW(textView),config->justification);
+	gtk_text_view_set_left_margin (GTK_TEXT_VIEW(textView),config->left_margin);
+	gtk_text_view_set_right_margin (GTK_TEXT_VIEW(textView),config->right_margin);
+	
+	fontDesc = pango_font_description_from_string (config->font);
+	gtk_widget_modify_font (textView,fontDesc);
+	pango_font_description_free (fontDesc);
+}
+
+void loadSettings(Settings *config)
+{
+	GKeyFile *file = g_key_file_new();
+	gchar *configFileName = g_malloc(sizeof(gchar)*50);
+	sprintf(configFileName,"%s/.simple_editor/se.rc",g_get_home_dir ());
+	if (!g_key_file_load_from_file(file,configFileName,G_KEY_FILE_NONE,NULL))
+	{
+		gchar *configFileDir = g_malloc(sizeof(gchar)*50);
+		gchar *defaultConf = "[settings]\n"
+							 "wrapMode=none\n"
+							 "justification=left\n"
+						     "leftMargin=5\n"
+							 "rightMargin=5\n"
+							 "font=Sans 13\n";
+		sprintf(configFileDir,"%s/.simple_editor/",g_get_home_dir ());
+		
+		g_mkdir (configFileDir,-1);
+		g_file_set_contents (configFileName,defaultConf,85,NULL);
+	}
+	g_key_file_load_from_file(file,configFileName,G_KEY_FILE_NONE,NULL);
+	if(!g_strcmp0(g_key_file_get_string(file,"settings","wrapMode",NULL),"none"))
+	   config->wrap_mode = GTK_WRAP_NONE;
+	else
+	   config->wrap_mode = GTK_WRAP_WORD;
+	if(!g_strcmp0(g_key_file_get_string(file,"settings","justification",NULL),"left"))
+	   config->justification = GTK_JUSTIFY_LEFT;
+	else if(!g_strcmp0(g_key_file_get_string(file,"settings","justification",NULL),"right"))
+	   config->justification = GTK_JUSTIFY_RIGHT;
+	else
+	   config->justification = GTK_JUSTIFY_CENTER;
+	config->font	=   g_key_file_get_string(file,"settings","font",NULL);
+	
+}
 
 
+void saveSettings(Settings *config)
+{
+	GKeyFile *file = g_key_file_new();
+	gchar *configFileName = g_malloc(sizeof(gchar)*50);
+	sprintf(configFileName,"%s/.simple_editor/se.rc",g_get_home_dir ());
+	if (g_key_file_load_from_file(file,configFileName,G_KEY_FILE_NONE,NULL))
+	{
+		if(config->wrap_mode == GTK_WRAP_NONE)
+			g_key_file_set_string (file,"settings","wrapMode","none");
+		else 
+			g_key_file_set_string (file,"settings","wrapMode","word");
+		if(config->justification == GTK_JUSTIFY_LEFT)
+			g_key_file_set_string (file,"settings","justification","left");
+		else if(config->justification == GTK_JUSTIFY_RIGHT)
+			g_key_file_set_string (file,"settings","justification","right");
+		else
+			g_key_file_set_string (file,"settings","justification","center");
 
-
-
-
+		g_key_file_set_string (file,"settings","font",config->font);
+			
+		g_key_file_save_to_file (file,configFileName,NULL);
+		g_key_file_free (file);
+	}
+		
+}
 
 
 

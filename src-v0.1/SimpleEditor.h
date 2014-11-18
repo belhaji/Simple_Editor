@@ -1,10 +1,3 @@
-/***************************************************************************
- *            operations.h
- *
- *  Sat October 04 12:30:52 2014
- *  Copyright  2014  adil belhaji
- *  
- ****************************************************************************/
 /*
  * Copyright (C) 2014 adil belhaji <belhaji.dev@gmail.com>
  * 
@@ -22,30 +15,37 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#ifndef	 OP_H
-
-#define  OP_H
+#ifndef SIMPLEEDITOR_H
+#define SIMPLEEDITOR_H
 
 #include <gtk/gtk.h>
 
 
-typedef struct {
-	gchar *name;
-	gboolean isSaved;
-	gboolean isOnDisk;
-}Document;
 
-extern Document docFile;
 
-void newFile(GtkWidget *textView);
 
-void openFile(GtkWidget *textView);
 
-void save(GtkWidget *textView);
 
-gboolean saveAs(GtkWidget *textView);
+GtkWidget * createWindow(gchar *title,
+                         gint width,
+                         gint height,
+                         GtkWindowPosition pos);
 
-void quit();
 
-#endif /* OPERETIONS_H */
+GtkWidget * createMenuBar(GtkWidget * textView,GtkWidget *mainWindow);
+
+
+
+GtkWidget * createToolBar(GtkWidget * textView);
+
+
+GtkWidget * createTextView(GtkWidget * statusBar);
+
+
+GtkWidget * createStatusBar(void);
+
+
+/*GtkWidget * createSettingsDialog(GtkWidget *textView);   */
+
+
+#endif /* SIMPLEEDITOR_H */

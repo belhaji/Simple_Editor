@@ -101,10 +101,10 @@ GtkWidget * createMenuBar(GtkWidget * textView,GtkWidget *mainWindow)
 	gtk_menu_shell_append (GTK_MENU_SHELL(menuEdit),menuItem);
 	g_signal_connect(G_OBJECT(menuItem),"activate",G_CALLBACK(menu_item_deselect_clicked ),(gpointer) textView);
 
-	menuItem	= gtk_menu_item_new_with_label ("Font");
+	menuItem	= gtk_menu_item_new_with_label ("Settings");
 	gtk_menu_shell_append (GTK_MENU_SHELL(menuEdit),menuItem);
-	g_signal_connect(G_OBJECT(menuItem),"activate",G_CALLBACK(menu_item_font_clicked ),(gpointer) textView);
-
+	g_signal_connect(G_OBJECT(menuItem),"activate",G_CALLBACK(menu_item_settings_clicked ),(gpointer) textView);
+	
 	menuItem	= gtk_menu_item_new_with_label ("Edit");
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM(menuItem),menuEdit);
 	gtk_menu_shell_append (GTK_MENU_SHELL(menuBar),menuItem);
@@ -145,7 +145,7 @@ GtkWidget * createToolBar(GtkWidget * textView)
 	toolBar			= gtk_toolbar_new ();
 	gtk_toolbar_set_tooltips(GTK_TOOLBAR(toolBar),TRUE);
 	gtk_toolbar_set_style(GTK_TOOLBAR(toolBar),GTK_TOOLBAR_BOTH);
-	gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolBar),GTK_ICON_SIZE_BUTTON);
+	gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolBar),GTK_ICON_SIZE_MENU);
 	
 	btnNew			= gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
 	btnOpen			= gtk_tool_button_new_from_stock (GTK_STOCK_OPEN);
@@ -191,22 +191,19 @@ GtkWidget * createTextView(GtkWidget * statusBar){
 	GtkWidget * textView;
 	textView	= gtk_text_view_new ();
 	gsize  lenText;	
-	gchar * fontName;
 	PangoFontDescription *fontDesc;
-	gchar* configFileName = g_malloc(sizeof(gchar)*50);
-	sprintf(configFileName,"%s/.simple_editor.conf",g_get_home_dir ());
 
-	if(g_file_test (configFileName,G_FILE_TEST_EXISTS))
-	{
-		g_file_get_contents(configFileName,&fontName,NULL,NULL);
-		fontDesc = pango_font_description_from_string (fontName);	
-		gtk_widget_modify_font(textView,fontDesc);			
-		pango_font_description_free (fontDesc);	
-	} 
+	loadSettings (&config);
+	
+	fontDesc = pango_font_description_from_string (config.font);	
+	gtk_widget_modify_font(textView,fontDesc);			
+	pango_font_description_free (fontDesc);	 
 
 	gtk_text_view_set_accepts_tab (GTK_TEXT_VIEW(textView),TRUE);
-	gtk_text_view_set_left_margin (GTK_TEXT_VIEW(textView),5);
-	gtk_text_view_set_right_margin(GTK_TEXT_VIEW(textView),5);
+	gtk_text_view_set_left_margin (GTK_TEXT_VIEW(textView),config.left_margin);
+	gtk_text_view_set_right_margin(GTK_TEXT_VIEW(textView),config.right_margin);
+	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(textView),config.wrap_mode);
+	gtk_text_view_set_justification( GTK_TEXT_VIEW(textView),config.justification);
 	
 	g_signal_connect(G_OBJECT(textView),"cut-clipboard",G_CALLBACK(textViewCut),(gpointer) statusBar);
 	g_signal_connect(G_OBJECT(textView),"copy-clipboard",G_CALLBACK(textViewCopy),(gpointer) statusBar);
@@ -227,6 +224,74 @@ GtkWidget * createStatusBar(void){
 }
 
 
+
+/*GtkWidget * createSettingsDialog(GtkWidget *textView){
+	
+	GtkWidget   *dialog,
+				*labelWrap,
+				*radioWrapNone,
+				*radioWrapWord,
+				*labelJustify,
+				*radioJustifyLeft,
+				*radioJustifyRight,
+				*radioJustifyCenter,
+				*labelMarginLeft,
+				*spinLeftMargin,
+				*labelMarginRight,
+				*spinRightMargin,
+				*table,
+				*area;
+	GSList  *groupWrap,
+			*groupJustify;
+	dialog = gtk_dialog_new_with_buttons ("Settings",
+                                                 NULL,
+                                                 GTK_DIALOG_MODAL,
+                                                 GTK_STOCK_OK,
+                                                 GTK_RESPONSE_OK,
+	                                  			 GTK_STOCK_APPLY,
+	                                  			 GTK_RESPONSE_APPLY,
+                                                 GTK_STOCK_CANCEL,
+                                                 GTK_RESPONSE_CANCEL,
+                                                 NULL);
+	
+	area				=   gtk_dialog_get_content_area (GTK_DIALOG(dialog));
+	table				=   gtk_table_new (7,4,TRUE);
+	labelWrap			=   gtk_label_new("Wrap text :");
+	labelJustify		=   gtk_label_new("justification :");
+	labelMarginLeft		=   gtk_label_new("margin left :");
+	labelMarginRight	=   gtk_label_new("margin right :");
+	radioWrapNone		=   gtk_radio_button_new_with_label (NULL,"wrap none");
+	groupWrap			=   gtk_radio_button_get_group (GTK_RADIO_BUTTON(radioWrapNone));
+	radioWrapWord		=   gtk_radio_button_new_with_label (groupWrap,"wrap word");
+	radioJustifyCenter  =   gtk_radio_button_new_with_label (NULL,"justify center");
+	groupJustify		=   gtk_radio_button_get_group (GTK_RADIO_BUTTON(radioJustifyCenter));
+	radioJustifyLeft	=   gtk_radio_button_new_with_label (groupJustify,"justify left");
+	groupJustify		=   gtk_radio_button_get_group (GTK_RADIO_BUTTON(radioJustifyLeft));
+	radioJustifyRight   =   gtk_radio_button_new_with_label (groupJustify,"justify right");
+	spinLeftMargin		=   gtk_spin_button_new_with_range (0,10,1);
+	spinRightMargin		=   gtk_spin_button_new_with_range (0,10,1);
+
+	gtk_table_attach_defaults (GTK_TABLE(table),labelWrap,0,1,0,1);
+	gtk_table_attach_defaults (GTK_TABLE(table),radioWrapNone,1,2,1,2);
+	gtk_table_attach_defaults (GTK_TABLE(table),radioWrapWord,2,3,1,2);
+	
+	gtk_table_attach_defaults (GTK_TABLE(table),labelJustify,0,1,2,3);
+	gtk_table_attach_defaults (GTK_TABLE(table),radioJustifyLeft,1,2,3,4);
+	gtk_table_attach_defaults (GTK_TABLE(table),radioJustifyCenter,2,3,3,4);
+	gtk_table_attach_defaults (GTK_TABLE(table),radioJustifyRight,3,4,3,4);
+
+	gtk_table_attach_defaults (GTK_TABLE(table),labelMarginLeft,0,1,4,5);
+	gtk_table_attach_defaults (GTK_TABLE(table),spinLeftMargin,1,2,4,5);
+	gtk_table_attach_defaults (GTK_TABLE(table),labelMarginRight,0,1,5,6);
+	gtk_table_attach_defaults (GTK_TABLE(table),spinRightMargin,1,2,5,6);
+
+	gtk_table_set_homogeneous (GTK_TABLE(table),TRUE);
+	gtk_box_pack_start (GTK_BOX(area),table,FALSE,FALSE,0);
+	gtk_widget_show_all (table);	
+	return dialog;
+}
+
+*/
 
 
 

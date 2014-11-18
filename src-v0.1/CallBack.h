@@ -49,7 +49,8 @@ void menu_item_select_all_clicked(GtkWidget *wid,gpointer data);
 
 void menu_item_deselect_clicked(GtkWidget *wid,gpointer data);
 
-void menu_item_font_clicked (GtkWidget *wid,gpointer data);
+
+void menu_item_settings_clicked(GtkWidget *wid,gpointer data);
 
 void menu_item_about_clicked(GtkWidget *wid,gpointer data);
 
