@@ -122,6 +122,7 @@ void menu_item_settings_clicked(GtkWidget *wid,gpointer data){
 				*spinRightMargin,
 				*table,
 				*area,
+				*alignLabel,
 				*textView;
 	textView = GTK_WIDGET(data);
 	GSList  *groupWrap,
@@ -170,28 +171,50 @@ void menu_item_settings_clicked(GtkWidget *wid,gpointer data){
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON(spinLeftMargin),(gdouble)config.left_margin);
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON(spinRightMargin),(gdouble)config.right_margin);
 	gtk_font_button_set_font_name (GTK_FONT_BUTTON(fontButton),config.font);
-	gtk_table_attach_defaults (GTK_TABLE(table),labelWrap,0,1,0,1);
+
+	alignLabel  =   gtk_alignment_new (0,0,0,0);
+	gtk_alignment_set_padding (GTK_ALIGNMENT(alignLabel),0,0,20,0);
+	gtk_container_add (GTK_CONTAINER(alignLabel),labelWrap);
+
+	gtk_table_attach_defaults (GTK_TABLE(table),alignLabel,0,1,0,1);
 	gtk_table_attach_defaults (GTK_TABLE(table),radioWrapNone,1,2,1,2);
 	gtk_table_attach_defaults (GTK_TABLE(table),radioWrapWord,2,3,1,2);
+
+	alignLabel  =   gtk_alignment_new (0,0,0,0);
+	gtk_alignment_set_padding (GTK_ALIGNMENT(alignLabel),0,0,20,0);
+	gtk_container_add (GTK_CONTAINER(alignLabel),labelJustify);
 	
-	gtk_table_attach_defaults (GTK_TABLE(table),labelJustify,0,1,2,3);
+	gtk_table_attach_defaults (GTK_TABLE(table),alignLabel,0,1,2,3);
 	gtk_table_attach_defaults (GTK_TABLE(table),radioJustifyLeft,1,2,3,4);
 	gtk_table_attach_defaults (GTK_TABLE(table),radioJustifyCenter,2,3,3,4);
 	gtk_table_attach_defaults (GTK_TABLE(table),radioJustifyRight,3,4,3,4);
 
-	gtk_table_attach_defaults (GTK_TABLE(table),labelMarginLeft,0,1,4,5);
+	alignLabel  =   gtk_alignment_new (0,0,0,0);
+	gtk_alignment_set_padding (GTK_ALIGNMENT(alignLabel),0,0,20,0);
+	gtk_container_add (GTK_CONTAINER(alignLabel),labelMarginLeft);
+	
+	gtk_table_attach_defaults (GTK_TABLE(table),alignLabel,0,1,4,5);
 	gtk_table_attach_defaults (GTK_TABLE(table),spinLeftMargin,1,2,4,5);
-	gtk_table_attach_defaults (GTK_TABLE(table),labelMarginRight,0,1,5,6);
+
+	alignLabel  =   gtk_alignment_new (0,0,0,0);
+	gtk_alignment_set_padding (GTK_ALIGNMENT(alignLabel),0,0,20,0);
+	gtk_container_add (GTK_CONTAINER(alignLabel),labelMarginRight);
+	
+	gtk_table_attach_defaults (GTK_TABLE(table),alignLabel,0,1,5,6);
 	gtk_table_attach_defaults (GTK_TABLE(table),spinRightMargin,1,2,5,6);
 
-	gtk_table_attach_defaults (GTK_TABLE(table),labelFontButton,0,1,6,7);
+	alignLabel  =   gtk_alignment_new (0,0,0,0);
+	gtk_alignment_set_padding (GTK_ALIGNMENT(alignLabel),0,0,20,0);
+	gtk_container_add (GTK_CONTAINER(alignLabel),labelFontButton);
+	
+	gtk_table_attach_defaults (GTK_TABLE(table),alignLabel,0,1,6,7);
 	gtk_table_attach_defaults (GTK_TABLE(table),fontButton,2,4,6,7);
 
 	
 	gint i;
 	for(i=1;i<7;i++)
 		gtk_table_set_row_spacing (GTK_TABLE(table),i,5);
-	gtk_table_set_homogeneous (GTK_TABLE(table),TRUE);
+	//gtk_table_set_homogeneous (GTK_TABLE(table),TRUE);
 	gtk_box_pack_start (GTK_BOX(area),table,FALSE,FALSE,0);
 	gtk_widget_show_all (table);	
 	
